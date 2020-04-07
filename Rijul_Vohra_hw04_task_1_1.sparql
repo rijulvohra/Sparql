@@ -1,0 +1,15 @@
+PREFIX lmdb: <http://data.linkedmdb.org/movie/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+
+SELECT ?actor_name (GROUP_CONCAT(?film_name; SEPARATOR=", ") AS ?film_n)
+WHERE {
+  ?actor a lmdb:actor .
+  ?actor lmdb:actor_name ?actor_name .
+  ?film a lmdb:film .
+  ?film lmdb:actor ?actor .
+  ?film rdfs:label ?film_name . 
+  FILTER(STRSTARTS(?actor_name, 'B')) .
+}
+group by ?actor ?actor_name
+LIMIT 10

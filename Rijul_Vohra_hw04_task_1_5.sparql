@@ -1,0 +1,22 @@
+PREFIX lmdb: <http://data.linkedmdb.org/movie/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dbo: <http://dbpedia.org/ontology/>
+PREFIX dbp: <http://dbpedia.org/property/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+select ?actor_name ?birth_d
+where{
+  ?actor a lmdb:actor .
+  ?actor lmdb:actor_name ?actor_name .
+  ?actor owl:sameAs ?dbpedia_uri
+  FILTER(STRSTARTS(STR(?dbpedia_uri), 'http://dbpedia.org/resource/')) .
+  SERVICE <http://dbpedia.org/sparql>{
+    ?dbpedia_uri dbo:birthDate ?birth_d .
+    ?dbpedia_uri foaf:gender ?gender
+    FILTER(?gender = "female"@en)
+    }
+  FILTER(?birth_d >= "1970-12-31"^^xsd:date)
+}
+limit 10

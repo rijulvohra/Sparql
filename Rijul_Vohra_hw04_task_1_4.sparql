@@ -1,0 +1,17 @@
+PREFIX lmdb: <http://data.linkedmdb.org/movie/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?country_name (count(?genre_name) as ?drama_genre) ?population_in_millions
+where{
+  ?film a lmdb:film .
+  ?film lmdb:country ?country .
+  ?film lmdb:genre ?genre .
+  ?genre lmdb:film_genre_name ?genre_name .
+  ?country lmdb:country_name ?country_name .
+  ?country lmdb:country_population ?pop .
+  BIND((xsd:integer(?pop)/1000000) AS ?population_in_millions) 
+  FILTER(?genre_name = "Drama") 
+}
+group by ?country_name ?population_in_millions
+order by desc(?drama_genre)
+limit 10

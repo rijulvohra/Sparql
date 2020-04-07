@@ -1,0 +1,18 @@
+SELECT distinct ?human ?humanLabel ?dob 
+WHERE
+{
+  ?human wdt:P31 wd:Q5 ;
+         wdt:P106 wd:Q33999 .
+  ?human wdt:P106/wdt:P279 wd:Q639669 .
+  ?band  wdt:P31 wd:Q215380 .
+  ?human wdt:P361 ?band .
+  ?human p:P361 ?statement .
+  ?statement pq:P580 ?st .
+  ?statement pq:P582 ?et .
+  FILTER((?st >= "1960-01-01T00:00:00Z"^^xsd:dateTime) && (?et <= "2010-12-31T00:00:00Z"^^xsd:dateTime))
+  OPTIONAL { ?human wdt:P569 ?dob } .
+  BIND(YEAR(?dob) as ?yob) .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+  
+}
+LIMIT 10

@@ -1,0 +1,15 @@
+SELECT ?item ?itemLabel (count(?cast) as ?no_cast)
+WHERE {
+  ?item wdt:P31 wd:Q11424 .
+  ?item wdt:P161 ?cast .
+  ?cast wdt:P31 wd:Q5 .
+  ?cast wdt:P1411 wd:Q103916 .
+  ?cast p:P1411 ?statement .
+  ?statement ps:P1411 wd:Q103916 .
+  ?statement pq:P585 ?nomination_year .
+  FILTER(?nomination_year >= "2000-12-31T00:00:00Z"^^xsd:dateTime)
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+group by ?item ?itemLabel
+having (?no_cast >= 4)
+limit 10

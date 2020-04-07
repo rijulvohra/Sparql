@@ -1,0 +1,16 @@
+PREFIX lmdb: <http://data.linkedmdb.org/movie/>
+
+select ?actor_name ?director_name (count(?film) as ?no_films)
+where {
+  ?actor a lmdb:actor .
+  ?director a lmdb:director .
+  ?film a lmdb:film .
+  ?film lmdb:actor ?actor .
+  ?film lmdb:director ?director .
+  ?actor lmdb:actor_name ?actor_name .
+  ?director lmdb:director_name ?director_name .
+  FILTER (?actor_name != ?director_name)
+}
+group by ?actor_name ?director_name
+having (?no_films > 20)
+LIMIT 10

@@ -1,0 +1,17 @@
+PREFIX lmdb: <http://data.linkedmdb.org/movie/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+
+SELECT ?actor ?name 
+WHERE{
+  ?actor a lmdb:actor .
+  ?producer a lmdb:producer .
+  ?actor lmdb:actor_name ?name .
+  ?producer lmdb:producer_name ?name .
+  FILTER NOT EXISTS {
+    ?director a lmdb:director .
+    ?director lmdb:director_name ?name .
+  }
+}
+LIMIT 10
